@@ -1,34 +1,54 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  //Product Data 생성 api
+  @Post('create')
+  async createdProduct(
+    // @Body('name') name: string,
+    // @Body('desc') desc: string,
+    @Body() createProductDto: CreateProductDto,
+  ) {
+    return await this.productService.createdProduct(createProductDto);
   }
-
-  @Get()
-  findAll() {
-    return this.productService.findAll();
+  //Product Data 전체 불러오기 api
+  @Get('all')
+  async getProducts() {
+    return await this.productService.getProducts();
   }
-
+  //Product 상세 데이터 불러오기 api (By id)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
+  async getProductById(@Param('id') id: string) {
+    return await this.productService.getProductById(id);
   }
-
+  //Product Data 상세 데이터 수정 api(By id)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
+  async updateProductById(
+    @Param('id') id: string,
+    @Body() updateProductDto: CreateProductDto,
+  ) {
+    return await this.productService.updateProductById(id, updateProductDto);
   }
-
+  //Product Data 전체 삭제 api
+  @Delete()
+  async deleteProducts() {
+    return await this.productService.deleteProducts();
+  }
+  //Product 상세 데이터 삭제 api(By id)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productService.remove(+id);
+  async deleteProductById(@Param('id') id: string) {
+    return await this.productService.deleteProductById(id);
   }
 }
