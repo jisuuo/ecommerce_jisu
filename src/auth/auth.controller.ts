@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -6,6 +6,7 @@ import { LoginUserDto } from '../user/dto/login-user.dto';
 import { LocalUserGuard } from './guards/local-user.guard';
 import { RequestWithUser } from './interfaces/requestWithUser.interface';
 import { use } from 'passport';
+import { JwtUserGuard } from './guards/jwt-user.guard';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -33,5 +34,12 @@ export class AuthController {
       user,
       token,
     };
+  }
+
+  // 로그인 한 사람의 프로필 정보 가져오기 (토큰 검증)
+  @Get()
+  @UseGuards(JwtUserGuard)
+  async getUserInfoByToken(@Req() req: RequestWithUser) {
+    return req.user;
   }
 }

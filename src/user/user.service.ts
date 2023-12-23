@@ -21,7 +21,13 @@ export class UserService {
 
   async getUserByEmail(email: string) {
     const user = await this.userRepo.findOneBy({ email });
-    if(user) return user;
+    if (user) return user;
+    throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+  }
+
+  async getUserById(userId: string) {
+    const user = await this.userRepo.findOneBy({ id: userId });
+    if (user) return user;
     throw new HttpException('Not found', HttpStatus.NOT_FOUND);
   }
 }
