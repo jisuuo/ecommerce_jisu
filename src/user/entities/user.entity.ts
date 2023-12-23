@@ -26,7 +26,6 @@ export class User extends BaseEntity {
     } catch (err) {
       console.log(err);
       throw new InternalServerErrorException();
-
     }
   }
 }
