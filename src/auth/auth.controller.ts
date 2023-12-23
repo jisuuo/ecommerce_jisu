@@ -50,5 +50,10 @@ export class AuthController {
   }
 
   @Post('email/check')
-  async checkEmail(@Body() checkEmailDto: CheckEmailDto) {}
+  async checkEmail(@Body() checkEmailDto: CheckEmailDto) {
+    return await this.authService.checkEmailVerification(
+      checkEmailDto.email,
+      checkEmailDto.code,
+    );
+  }
 }

@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Post,
+} from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { LoginUserDto } from '../user/dto/login-user.dto';
@@ -51,7 +57,7 @@ export class AuthService {
 
   // 이메일 전송 테스트 로직
   async sendEmailVerification(email: string) {
-    const generateNumber = this.generatOTP();
+    const generateNumber = this.generateOTP();
     // Redis에 저장
     await this.cacheManger.set(email, generateNumber);
     await this.emailService.sendMail({
@@ -59,9 +65,22 @@ export class AuthService {
       subject: '이메일 인증-지수',
       text: `이메일을 인증합니다. 아래번호를 확인해주세요 ${generateNumber}`,
     });
+    return 'Please Check your email';
   }
 
-  generatOTP() {
+  // 랜덤넘버 확인 API
+  @Post()
+  async checkEmailVerification(email: string, code: string) {
+    const number = await this.cacheManger.get(email);
+    if (number !== code) {
+      throw new HttpException('Not Matched', HttpStatus.BAD_REQUEST);
+    }
+    // 인증 성공 시 데이터 삭제
+    await this.cacheManger.del(email);
+    return true;
+  }
+
+  generateOTP() {
     let OTP = '';
     for (let i = 1; i <= 6; i++) {
       OTP += Math.floor(Math.random() * 10);
