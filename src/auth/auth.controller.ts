@@ -42,4 +42,9 @@ export class AuthController {
   async getUserInfoByToken(@Req() req: RequestWithUser) {
     return req.user;
   }
+
+  @Post('email')
+  async sendEmail(@Body('email') email: string) {
+    return await this.authService.emailTest(email);
+  }
 }

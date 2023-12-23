@@ -5,6 +5,7 @@ import { LoginUserDto } from '../user/dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { TokenPayloadInterface } from './interfaces/tokenPayload.interface';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class AuthService {
@@ -12,6 +13,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly emailService: EmailService,
   ) {}
 
   // 회원가입 로직
@@ -42,5 +44,23 @@ export class AuthService {
       )}`,
     });
     return token;
+  }
+
+  // 이메일 전송 테스트 로직
+  async emailTest(email: string) {
+    const generateNumber = this.generatOTP();
+    await this.emailService.sendMail({
+      to: email,
+      subject: '이메일 인증-지수',
+      text: `이메일을 인증합니다. 아래번호를 확인해주세요 ${generateNumber}`,
+    });
+  }
+
+  generatOTP() {
+    let OTP = '';
+    for (let i = 1; i <= 6; i++) {
+      OTP += Math.floor(Math.random() * 10);
+    }
+    return OTP;
   }
 }
