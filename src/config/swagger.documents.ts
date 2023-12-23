@@ -4,6 +4,7 @@ export class BaseAPIDocument {
   public builder = new DocumentBuilder();
   public initializeOptions() {
     return this.builder
+      .addBearerAuth()
       .setTitle('Jisu Ecommerce API')
       .setDescription('Jisu Ecommerce Description')
       .setVersion('1.0')
