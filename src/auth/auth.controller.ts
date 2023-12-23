@@ -5,6 +5,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { LoginUserDto } from '../user/dto/login-user.dto';
 import { LocalUserGuard } from './guards/local-user.guard';
 import { RequestWithUser } from './interfaces/requestWithUser.interface';
+import { use } from 'passport';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -26,6 +27,11 @@ export class AuthController {
   @Post('login')
   @UseGuards(LocalUserGuard)
   async loginUser(@Req() req: RequestWithUser) {
-    return req.user;
+    const user = req.user;
+    const token = await this.authService.getCookieWithJWTAccessToken(user.id);
+    return {
+      user,
+      token,
+    };
   }
 }
