@@ -7,3 +7,11 @@ services:
       - "5432:5432"
     env_file:
       - docker.env
+
+  redis:
+    container_name: redis
+    image: "redis:alpine"
+    env_file:
+      - .env
+    ports:
+      - "6379:6379"

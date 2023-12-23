@@ -7,6 +7,7 @@ import { LocalUserGuard } from './guards/local-user.guard';
 import { RequestWithUser } from './interfaces/requestWithUser.interface';
 import { use } from 'passport';
 import { JwtUserGuard } from './guards/jwt-user.guard';
+import { CheckEmailDto } from '../user/dto/check-email.dto';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -43,8 +44,11 @@ export class AuthController {
     return req.user;
   }
 
-  @Post('email')
+  @Post('email/send')
   async sendEmail(@Body('email') email: string) {
-    return await this.authService.emailTest(email);
+    return await this.authService.sendEmailVerification(email);
   }
+
+  @Post('email/check')
+  async checkEmail(@Body() checkEmailDto: CheckEmailDto) {}
 }
