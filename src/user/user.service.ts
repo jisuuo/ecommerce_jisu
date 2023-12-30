@@ -15,10 +15,7 @@ export class UserService {
 
   // User 생성 api
   async createdUser(createUserDto: CreateUserDto) {
-    const newUser = await this.userRepo.create({
-      ...createUserDto,
-      provider: Provider.LOCAL,
-    });
+    const newUser = await this.userRepo.create(createUserDto);
     await this.userRepo.save(newUser);
     return newUser;
   }
