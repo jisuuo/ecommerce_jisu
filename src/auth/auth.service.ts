@@ -69,7 +69,6 @@ export class AuthService {
   }
 
   // 랜덤넘버 확인 API
-  @Post()
   async checkEmailVerification(email: string, code: string) {
     const number = await this.cacheManger.get(email);
     if (number !== code) {

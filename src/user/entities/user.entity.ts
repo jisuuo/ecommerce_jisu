@@ -38,7 +38,7 @@ export class User extends BaseEntity {
   public profileImg?: string;
 
   @BeforeInsert()
-  async hashPassword(): Promise<void> {
+  async beforeSaveFunction(): Promise<void> {
     try {
       if (this.provider !== Provider.LOCAL) {
         return;

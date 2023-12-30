@@ -31,6 +31,10 @@ import * as Joi from '@hapi/joi';
         REDIS_HOST: Joi.string().required(),
         REDIS_PORT: Joi.number().required(),
         REDIS_TTL: Joi.number().required(),
+
+        GOOGLE_AUTH_CLIENT_ID: Joi.string().required(),
+        GOOGLE_AUTH_CLIENT_SECRET: Joi.string().required(),
+        GOOGLE_AUTH_CALLBACK_URL: Joi.string().required(),
       }),
     }),
     DatabaseModule,
