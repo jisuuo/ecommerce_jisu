@@ -17,6 +17,7 @@ import { use } from 'passport';
 import { JwtUserGuard } from './guards/jwt-user.guard';
 import { CheckEmailDto } from '../user/dto/check-email.dto';
 import { GoogleUserGuard } from './guards/google-user.guard';
+import { NaverUserGuard } from './guards/naver-user.guard';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -75,6 +76,23 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(GoogleUserGuard)
   async googleLoginCallback(@Req() req: RequestWithUser) {
+    const { user } = req;
+    const token = await this.authService.getCookieWithJWTAccessToken(user.id);
+    return {
+      user,
+      token,
+    };
+  }
+
+  @Get('naver')
+  @UseGuards(NaverUserGuard)
+  async naverLogin() {
+    return HttpStatus.OK;
+  }
+  @Get('naver/callback')
+  @UseGuards(NaverUserGuard)
+  async naverLoginCallback(@Req() req: RequestWithUser) {
+    //return req.user;
     const { user } = req;
     const token = await this.authService.getCookieWithJWTAccessToken(user.id);
     return {

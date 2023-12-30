@@ -35,6 +35,10 @@ import * as Joi from '@hapi/joi';
         GOOGLE_AUTH_CLIENT_ID: Joi.string().required(),
         GOOGLE_AUTH_CLIENT_SECRET: Joi.string().required(),
         GOOGLE_AUTH_CALLBACK_URL: Joi.string().required(),
+
+        NAVER_AUTH_CLIENT_ID: Joi.string().required(),
+        NAVER_AUTH_CLIENT_SECRET: Joi.string().required(),
+        NAVER_AUTH_CALLBACK_URL: Joi.string().required(),
       }),
     }),
     DatabaseModule,
