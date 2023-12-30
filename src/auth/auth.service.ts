@@ -1,10 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  Post,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { LoginUserDto } from '../user/dto/login-user.dto';
@@ -14,6 +8,7 @@ import { TokenPayloadInterface } from './interfaces/tokenPayload.interface';
 import { EmailService } from '../email/email.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { Provider } from '../user/entities/provider.enum';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +22,10 @@ export class AuthService {
 
   // 회원가입 로직
   async createdUser(createUserDto: CreateUserDto) {
-    return await this.userService.createdUser(createUserDto);
+    return await this.userService.createdUser({
+      ...createUserDto,
+      provider: Provider.LOCAL,
+    });
   }
 
   // 로그인 로직

@@ -75,6 +75,11 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(GoogleUserGuard)
   async googleLoginCallback(@Req() req: RequestWithUser) {
-    return req.user;
+    const { user } = req;
+    const token = await this.authService.getCookieWithJWTAccessToken(user.id);
+    return {
+      user,
+      token,
+    };
   }
 }

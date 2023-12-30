@@ -29,6 +29,7 @@ export class GoogleUserStrategy extends PassportStrategy(Strategy) {
       console.log('++++++++++++++++++++');
       const user = await this.userService.getUserByEmail(email);
       if (user.provider !== provider) {
+        console.log('*************');
         throw new HttpException('Not Matched Provider', HttpStatus.CONFLICT);
       }
       console.log('++++++++++++++++++++');

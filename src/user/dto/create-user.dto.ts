@@ -12,7 +12,7 @@ export class CreateUserDto {
   password?: string;
 
   @ApiProperty()
-  provider?: Provider;
+  provider?: Provider = Provider.LOCAL;
 
   @ApiProperty()
   profileImg?: string;
