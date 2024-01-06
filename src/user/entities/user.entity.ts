@@ -5,6 +5,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { Role } from './role.enum';
 import { Provider } from './provider.enum';
 import * as gravatar from 'gravatar';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User extends BaseEntity {
@@ -17,6 +18,8 @@ export class User extends BaseEntity {
   @Column({
     nullable: true,
   })
+  // response 데이터 표시 제외 항목 설정
+  @Exclude()
   public password?: string;
 
   @Column({
