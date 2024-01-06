@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
 import { RedisModule } from './redis/redis.module';
 import { ReviewModule } from './review/review.module';
+import { MovieModule } from './movie/movie.module';
 import * as Joi from '@hapi/joi';
 
 @Module({
@@ -40,6 +41,9 @@ import * as Joi from '@hapi/joi';
         NAVER_AUTH_CLIENT_ID: Joi.string().required(),
         NAVER_AUTH_CLIENT_SECRET: Joi.string().required(),
         NAVER_AUTH_CALLBACK_URL: Joi.string().required(),
+
+        TMDB_URL: Joi.string().required(),
+        TMDB_KEY: Joi.string().required(),
       }),
     }),
     DatabaseModule,
@@ -48,6 +52,7 @@ import * as Joi from '@hapi/joi';
     EmailModule,
     RedisModule,
     ReviewModule,
+    MovieModule,
   ],
   controllers: [AppController],
   providers: [AppService],
