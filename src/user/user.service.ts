@@ -32,12 +32,12 @@ export class UserService {
     throw new HttpException('Not found', HttpStatus.NOT_FOUND);
   }
 
-  async getUsers(userId: string) {
-    const user = await this.getUserById(userId);
-    console.log(user.roles.includes(Role.ADMIN));
-    if (user.roles.includes(Role.ADMIN)) {
-      throw new HttpException('Not Admin', HttpStatus.BAD_REQUEST);
-    }
+  async getUsers() {
+    // const user = await this.getUserById(userId);
+    // console.log(user.roles.includes(Role.ADMIN));
+    // if (user.roles.includes(Role.ADMIN)) {
+    //   throw new HttpException('Not Admin', HttpStatus.BAD_REQUEST);
+    // }
     return await this.userRepo.find();
   }
 }
