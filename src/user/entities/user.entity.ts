@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, Entity } from 'typeorm';
+import { BeforeInsert, Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { BaseEntity } from '../../common/base.entity';
 import * as bcrypt from 'bcryptjs';
 import { InternalServerErrorException } from '@nestjs/common';
@@ -6,6 +6,7 @@ import { Role } from './role.enum';
 import { Provider } from './provider.enum';
 import * as gravatar from 'gravatar';
 import { Exclude } from 'class-transformer';
+import { AddressEntity } from './address.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -43,6 +44,13 @@ export class User extends BaseEntity {
     nullable: true,
   })
   public profileImg?: string;
+
+  @OneToOne(() => AddressEntity, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinColumn()
+  public address: AddressEntity;
 
   @BeforeInsert()
   async beforeSaveFunction(): Promise<void> {
