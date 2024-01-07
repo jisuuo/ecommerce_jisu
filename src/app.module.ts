@@ -11,6 +11,7 @@ import { RedisModule } from './redis/redis.module';
 import { ReviewModule } from './review/review.module';
 import { MovieModule } from './movie/movie.module';
 import * as Joi from '@hapi/joi';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -53,6 +54,8 @@ import * as Joi from '@hapi/joi';
     RedisModule,
     ReviewModule,
     MovieModule,
+    // 스케줄링
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],

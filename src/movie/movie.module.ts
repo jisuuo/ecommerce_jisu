@@ -5,9 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Movie } from './entites/movie.entity';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
+import { EmailModule } from '../email/email.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Movie]), HttpModule, ConfigModule],
+  imports: [
+    TypeOrmModule.forFeature([Movie]),
+    HttpModule,
+    ConfigModule,
+    EmailModule,
+  ],
   controllers: [MovieController],
   providers: [MovieService],
 })
