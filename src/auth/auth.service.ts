@@ -86,6 +86,13 @@ export class AuthService {
     return 'Please Check your email';
   }
 
+  async getCookieForLogout() {
+    return [
+      `Authentication=; HttpOnly; Path=/; Max-Age= 0`,
+      'Refresh=; HttpOnly; Path=/; Max-Age= 0',
+    ];
+  }
+
   // 랜덤넘버 확인 API
   async checkEmailVerification(email: string, code: string) {
     const number = await this.cacheManger.get(email);

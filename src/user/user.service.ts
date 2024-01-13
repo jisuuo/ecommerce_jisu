@@ -63,4 +63,8 @@ export class UserService {
 
     if (isRefreshTokenMatching) return user;
   }
+
+  async removeRefreshToken(userId: string) {
+    return await this.cacheManager.del(userId);
+  }
 }

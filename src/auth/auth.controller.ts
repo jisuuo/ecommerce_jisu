@@ -127,4 +127,15 @@ export class AuthController {
     req.res.setHeader('Set-Cookie', accessTokenCookie);
     return user;
   }
+
+  @Post('logout')
+  @UseGuards(AccssTokenGuard)
+  async logout(@Req() req: RequestWithUser) {
+    await this.userService.removeRefreshToken(req.user.id);
+    req.res.setHeader(
+      'Set-Cookie',
+      await this.authService.getCookieForLogout(),
+    );
+    return true;
+  }
 }
