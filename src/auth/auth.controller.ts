@@ -12,15 +12,20 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { LocalUserGuard } from './guards/local-user.guard';
 import { RequestWithUser } from './interfaces/requestWithUser.interface';
-import { JwtUserGuard } from './guards/jwt-user.guard';
+import { AccssTokenGuard } from './guards/accss-token.guard';
 import { CheckEmailDto } from '../user/dto/check-email.dto';
 import { GoogleUserGuard } from './guards/google-user.guard';
 import { NaverUserGuard } from './guards/naver-user.guard';
+import { UserService } from '../user/user.service';
+import { RefreshTokenGuard } from './guards/refresh-token.guard';
 
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+  ) {}
 
   // 회원가입 api
   @Post('signup')
@@ -37,12 +42,13 @@ export class AuthController {
   @Post('login')
   @UseGuards(LocalUserGuard)
   async loginUser(@Req() req: RequestWithUser) {
-    const user = req.user;
+    const { user } = req;
     const accessTokenCookie =
       await this.authService.getCookieWithJWTAccessToken(user.id);
     const { cookie: refreshTokenCookie, token: refreshToken } =
       await this.authService.getCookieWithJWTRefreshToken(user.id);
 
+    await this.userService.setCurrentRefreshToken(refreshToken, user.id);
     req.res.setHeader('Set-Cookie', [accessTokenCookie, refreshTokenCookie]);
     return user;
     // return {
@@ -54,7 +60,7 @@ export class AuthController {
 
   // 로그인 한 사람의 프로필 정보 가져오기 (토큰 검증)
   @Get()
-  @UseGuards(JwtUserGuard)
+  @UseGuards(AccssTokenGuard)
   async getUserInfoByToken(@Req() req: RequestWithUser) {
     return req.user;
   }
@@ -82,11 +88,14 @@ export class AuthController {
   @UseGuards(GoogleUserGuard)
   async googleLoginCallback(@Req() req: RequestWithUser) {
     const { user } = req;
-    const token = await this.authService.getCookieWithJWTAccessToken(user.id);
-    return {
-      user,
-      //token,
-    };
+    const accessTokenCookie =
+      await this.authService.getCookieWithJWTAccessToken(user.id);
+    const { cookie: refreshTokenCookie, token: refreshToken } =
+      await this.authService.getCookieWithJWTRefreshToken(user.id);
+
+    await this.userService.setCurrentRefreshToken(refreshToken, user.id);
+    req.res.setHeader('Set-Cookie', [accessTokenCookie, refreshTokenCookie]);
+    return user;
   }
 
   @Get('naver')
@@ -99,10 +108,23 @@ export class AuthController {
   async naverLoginCallback(@Req() req: RequestWithUser) {
     //return req.user;
     const { user } = req;
-    const token = await this.authService.getCookieWithJWTAccessToken(user.id);
-    return {
-      user,
-      //token,
-    };
+    const accessTokenCookie =
+      await this.authService.getCookieWithJWTAccessToken(user.id);
+    const { cookie: refreshTokenCookie, token: refreshToken } =
+      await this.authService.getCookieWithJWTRefreshToken(user.id);
+
+    await this.userService.setCurrentRefreshToken(refreshToken, user.id);
+    req.res.setHeader('Set-Cookie', [accessTokenCookie, refreshTokenCookie]);
+    return user;
+  }
+
+  @Get('refresh')
+  @UseGuards(RefreshTokenGuard)
+  async refresh(@Req() req: RequestWithUser) {
+    const { user } = req;
+    const accessTokenCookie =
+      await this.authService.getCookieWithJWTAccessToken(user.id);
+    req.res.setHeader('Set-Cookie', accessTokenCookie);
+    return user;
   }
 }

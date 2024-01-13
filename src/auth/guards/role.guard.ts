@@ -1,10 +1,10 @@
 import { Role } from '../../user/entities/role.enum';
 import { CanActivate, ExecutionContext, mixin, Type } from '@nestjs/common';
-import { JwtUserGuard } from './jwt-user.guard';
+import { AccssTokenGuard } from './accss-token.guard';
 import { RequestWithUser } from '../interfaces/requestWithUser.interface';
 
 export const RoleGuard = (role: Role): Type<CanActivate> => {
-  class RoleGuardMixin extends JwtUserGuard {
+  class RoleGuardMixin extends AccssTokenGuard {
     async canActivate(context: ExecutionContext) {
       await super.canActivate(context);
 
