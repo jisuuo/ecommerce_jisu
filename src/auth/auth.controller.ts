@@ -30,7 +30,9 @@ export class AuthController {
   // 회원가입 api
   @Post('signup')
   async creatUser(@Body() createUserDto: CreateUserDto) {
-    return this.authService.createdUser(createUserDto);
+    const newUser = this.authService.createdUser(createUserDto);
+    await this.authService.sendVerificationLink(createUserDto.email);
+    return newUser;
   }
 
   // 로그인 api
@@ -137,5 +139,19 @@ export class AuthController {
       await this.authService.getCookieForLogout(),
     );
     return true;
+  }
+
+  // 이메일 컨펌메이션 false -> true
+  @Post('confirm')
+  async confirmationEmail(@Body('token') token: string) {
+    const email = await this.authService.decodeConfirmationToken(token);
+    await this.authService.confirmEmail(email);
+    return 'Success';
+  }
+
+  @Post('resend/email')
+  @UseGuards(AccssTokenGuard)
+  async resendEmail(@Req() req: RequestWithUser) {
+    return await this.authService.resendConfirmLink(req.user.id);
   }
 }

@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { LoginUserDto } from '../user/dto/login-user.dto';
@@ -9,6 +15,7 @@ import { EmailService } from '../email/email.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { Provider } from '../user/entities/provider.enum';
+import { VerificationTokenPayloadInterfaceInterface } from './interfaces/verificationTokenPayloadInterface.interface';
 
 @Injectable()
 export class AuthService {
@@ -81,7 +88,8 @@ export class AuthService {
     await this.emailService.sendMail({
       to: email,
       subject: '이메일 인증-지수',
-      text: `이메일을 인증합니다. 아래번호를 확인해주세요 ${generateNumber}`,
+      // html에 버튼을 같이 보내고 emailVerify 검증 api
+      //text: `이메일을 인증합니다. 아래번호를 확인해주세요 ${generateNumber}`,
     });
     return 'Please Check your email';
   }
@@ -93,6 +101,47 @@ export class AuthService {
     ];
   }
 
+  // 토큰 decode
+  async decodeConfirmationToken(token: string) {
+    try {
+      const payload = await this.jwtService.verify(token, {
+        secret: this.configService.get('VERIFICATION_TOKEN_SECRET'),
+      });
+      if (typeof payload === 'object' && 'email' in payload) {
+        return payload.email;
+      }
+      throw new BadRequestException();
+    } catch (err) {
+      if (err?.name === 'TokenExpiredError') {
+        throw new BadRequestException('Email confirmation token expired');
+      }
+      throw new BadRequestException('Bad Confirmation token');
+    }
+  }
+
+  async sendVerificationLink(email: string) {
+    const payload: VerificationTokenPayloadInterfaceInterface = { email };
+    const token = this.jwtService.sign(payload, {
+      secret: this.configService.get('VERIFICATION_TOKEN_SECRET'),
+      expiresIn: this.configService.get('VERIFICATION_TOKEN_EXPIRATION_TIME'),
+    });
+    const text =
+      'WELCOME TO THE APPLICATION. TO CONFIRM THE EMAIL ADDRESS, CLICK HERE';
+    return this.emailService.sendMail({
+      to: email,
+      subject: 'EMAIL CONFIRMATION',
+      text,
+    });
+  }
+
+  async confirmEmail(email: string) {
+    const user = await this.userService.getUserByEmail(email);
+    if (user.isEmailVerify) {
+      throw new BadRequestException('Email already Confirm');
+    }
+    await this.userService.markEmailAsConfirmed(email);
+  }
+
   // 랜덤넘버 확인 API
   async checkEmailVerification(email: string, code: string) {
     const number = await this.cacheManger.get(email);
@@ -102,6 +151,16 @@ export class AuthService {
     // 인증 성공 시 데이터 삭제
     await this.cacheManger.del(email);
     return true;
+  }
+
+  // 회원가입은 되어 있지만 인증을 하지 않았기에 userId로 user를 찾아야함.
+  async resendConfirmLink(userId: string) {
+    const user = await this.userService.getUserById(userId);
+    if (user.isEmailVerify) {
+      throw new BadRequestException('Confirmed Email');
+    }
+    await this.sendVerificationLink(user.email);
+    return 'Please Check your email';
   }
 
   generateOTP() {

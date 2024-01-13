@@ -25,6 +25,22 @@ export class User extends BaseEntity {
   @Exclude()
   public password?: string;
 
+  // RefreshToken RDB에 담기
+  // 1. 로그인 시 RDB에 넣기
+  // 2. refreshToken 해시 RDB애서 해싱값과 비교 (with RefreshAPI)
+  // 3. 로그아웃 시 RDB에서 삭제
+  @Column({
+    nullable: true,
+  })
+  @Exclude()
+  public refreshToken?: string;
+
+  @Column({
+    default: false,
+  })
+  @Exclude()
+  public isEmailVerify: boolean;
+
   @Column({
     type: 'enum',
     enum: Role,

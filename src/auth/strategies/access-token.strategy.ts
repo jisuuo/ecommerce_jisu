@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
@@ -26,6 +26,13 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: TokenPayloadInterface) {
     const user = await this.userService.getUserById(payload.userId);
+    // 회원가입과 하는 동시에 이메일을 전송
+    if (user.isEmailVerify === false) {
+      throw new HttpException(
+        '이메일이 검증이 안됐습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     console.log(user);
     return user;
   }

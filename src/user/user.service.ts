@@ -67,4 +67,13 @@ export class UserService {
   async removeRefreshToken(userId: string) {
     return await this.cacheManager.del(userId);
   }
+
+  async markEmailAsConfirmed(email: string) {
+    return await this.userRepo.update(
+      { email },
+      {
+        isEmailVerify: true,
+      },
+    );
+  }
 }

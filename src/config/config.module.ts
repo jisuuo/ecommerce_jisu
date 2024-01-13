@@ -36,6 +36,11 @@ import { ConfigModule } from '@nestjs/config';
 
         JWT_REFRESH_TOKEN_SECRET: Joi.string().required(),
         JWT_REFRESH_TOKEN_EXPIRATION_TIME: Joi.string().required(),
+
+        VERIFICATION_TOKEN_SECRET: Joi.string().required(),
+        VERIFICATION_TOKEN_EXPIRATION_TIME: Joi.string().required(),
+
+        EMAIL_CONFIRMATION_URL: Joi.string().required(),
       }),
     }),
   ],
