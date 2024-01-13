@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,6 +17,8 @@ async function bootstrap() {
   // 추후에 프론트엔드 서버 도메인 설정해주면 됨
   app.enableCors();
   app.setGlobalPrefix('api');
+  app.use(cookieParser());
+
   app.useGlobalPipes(new ValidationPipe());
   // response serialization
   app.useGlobalFilters(new HttpExceptionFilter());

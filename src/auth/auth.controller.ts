@@ -10,10 +10,8 @@ import {
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { LoginUserDto } from '../user/dto/login-user.dto';
 import { LocalUserGuard } from './guards/local-user.guard';
 import { RequestWithUser } from './interfaces/requestWithUser.interface';
-import { use } from 'passport';
 import { JwtUserGuard } from './guards/jwt-user.guard';
 import { CheckEmailDto } from '../user/dto/check-email.dto';
 import { GoogleUserGuard } from './guards/google-user.guard';
@@ -40,11 +38,18 @@ export class AuthController {
   @UseGuards(LocalUserGuard)
   async loginUser(@Req() req: RequestWithUser) {
     const user = req.user;
-    const token = await this.authService.getCookieWithJWTAccessToken(user.id);
-    return {
-      user,
-      token,
-    };
+    const accessTokenCookie =
+      await this.authService.getCookieWithJWTAccessToken(user.id);
+    const { cookie: refreshTokenCookie, token: refreshToken } =
+      await this.authService.getCookieWithJWTRefreshToken(user.id);
+
+    req.res.setHeader('Set-Cookie', [accessTokenCookie, refreshTokenCookie]);
+    return user;
+    // return {
+    //   user,
+    //   accessToken,
+    //   refreshToken,
+    // };
   }
 
   // 로그인 한 사람의 프로필 정보 가져오기 (토큰 검증)
@@ -80,7 +85,7 @@ export class AuthController {
     const token = await this.authService.getCookieWithJWTAccessToken(user.id);
     return {
       user,
-      token,
+      //token,
     };
   }
 
@@ -97,7 +102,7 @@ export class AuthController {
     const token = await this.authService.getCookieWithJWTAccessToken(user.id);
     return {
       user,
-      token,
+      //token,
     };
   }
 }

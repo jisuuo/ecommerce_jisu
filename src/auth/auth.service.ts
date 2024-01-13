@@ -50,7 +50,27 @@ export class AuthService {
         'JWT_ACCESS_TOKEN_EXPRIATION_TIME',
       )}`,
     });
-    return token;
+    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
+      'JWT_ACCESS_TOKEN_EXPRIATION_TIME',
+    )}`;
+  }
+
+  async getCookieWithJWTRefreshToken(userId: string) {
+    const payload: TokenPayloadInterface = { userId };
+    const token = this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
+      expiresIn: `${this.configService.get(
+        'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
+      )}`,
+    });
+    const cookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
+      'JWT_REFRESH_TOKEN_EXPIRATION_TIME',
+    )}`;
+    return {
+      cookie,
+      token,
+    };
+    //return token;
   }
 
   // 이메일 전송 테스트 로직
