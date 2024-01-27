@@ -15,6 +15,7 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { ProductsModule } from './products/products.module';
 import { PricesModule } from './prices/prices.module';
 import { TerminusModule } from '@nestjs/terminus';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { TerminusModule } from '@nestjs/terminus';
     ReviewsModule,
     ProductsModule,
     PricesModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

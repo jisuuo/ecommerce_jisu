@@ -41,6 +41,9 @@ import { ConfigModule } from '@nestjs/config';
         VERIFICATION_TOKEN_EXPIRATION_TIME: Joi.string().required(),
 
         EMAIL_CONFIRMATION_URL: Joi.string().required(),
+
+        NODE_ENV: Joi.string().required(),
+        SERVICE_PORT: Joi.number().required(),
       }),
     }),
   ],
