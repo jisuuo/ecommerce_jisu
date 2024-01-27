@@ -4,9 +4,11 @@ import {
   DiskHealthIndicator,
   HealthCheckResult,
   HealthCheckService,
+  HttpHealthIndicator,
   MemoryHealthIndicator,
   TypeOrmHealthIndicator,
 } from '@nestjs/terminus';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller()
 export class AppController {
@@ -16,8 +18,9 @@ export class AppController {
     private readonly typeOrmHealthIndicator: TypeOrmHealthIndicator,
     private readonly memoryHealthIndicator: MemoryHealthIndicator,
     private readonly diskHealthIndicator: DiskHealthIndicator,
+    private readonly httpHealthIndicator: HttpHealthIndicator,
   ) {}
-
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   @Get()
   async getHello(): Promise<HealthCheckResult> {
     //return this.appService.getHello();
@@ -33,6 +36,11 @@ export class AppController {
           thresholdPercent: 0.5,
           path: '/',
         }),
+      () =>
+        this.httpHealthIndicator.pingCheck(
+          'tmdb health',
+          'https://api.themoviedb.org',
+        ),
     ]);
   }
 }

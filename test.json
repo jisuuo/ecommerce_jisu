@@ -1,0 +1,22 @@
+{
+  "config": {
+    "target": "http://localhost/api/v1",
+    "phases": [
+      {
+        "duration": 3,
+        "arrivalRate": 8
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "flow": [
+        {
+          "get": {
+            "url": "http://localhost/api/v1"
+          }
+        }
+      ]
+    }
+  ]
+}

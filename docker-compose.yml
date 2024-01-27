@@ -46,6 +46,17 @@ services:
     networks:
       - jisu-network
 
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - 3306:3306 # HOST:CONTAINER
+    environment:
+      MYSQL_ROOT_PASSWORD: jisupassword
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
   redis:
     container_name: redis
     image: "redis:alpine"
