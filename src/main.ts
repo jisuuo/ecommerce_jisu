@@ -3,7 +3,11 @@ import { AppModule } from './app.module';
 import { BaseAPIDocument } from './config/swagger.documents';
 import { SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  ValidationPipe,
+  VersioningType,
+} from '@nestjs/common';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import * as cookieParser from 'cookie-parser';
@@ -17,6 +21,10 @@ async function bootstrap() {
   // 추후에 프론트엔드 서버 도메인 설정해주면 됨
   app.enableCors();
   app.setGlobalPrefix('api');
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+  });
   app.use(cookieParser());
 
   app.useGlobalPipes(new ValidationPipe());
