@@ -44,6 +44,8 @@ import { ConfigModule } from '@nestjs/config';
 
         NODE_ENV: Joi.string().required(),
         SERVICE_PORT: Joi.number().required(),
+
+        UPLOADED_FILES_DESTINATION: Joi.string().required(),
       }),
     }),
   ],

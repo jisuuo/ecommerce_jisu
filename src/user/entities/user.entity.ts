@@ -4,9 +4,10 @@ import * as bcrypt from 'bcryptjs';
 import { InternalServerErrorException } from '@nestjs/common';
 import { Role } from './role.enum';
 import { Provider } from './provider.enum';
-import * as gravatar from 'gravatar';
+// import * as gravatar from 'gravatar';
 import { Exclude } from 'class-transformer';
 import { AddressEntity } from './address.entity';
+import { LocalFile } from '../../local-file/entities/local-file.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -56,6 +57,18 @@ export class User extends BaseEntity {
   })
   public provider: Provider;
 
+  // @JoinColumn({ name: 'profileImg' })
+  // @OneToOne(() => LocalFile, {
+  //   nullable: true,
+  // })
+  // public avatar?: LocalFile;
+
+  @JoinColumn({ name: 'profileImg' })
+  @OneToOne(() => LocalFile, {
+    nullable: true,
+  })
+  public avatar?: LocalFile;
+
   @Column({
     nullable: true,
   })
@@ -75,12 +88,12 @@ export class User extends BaseEntity {
         return;
       }
       // 프로필 이미지 자동생성
-      this.profileImg = gravatar.url(this.email, {
-        s: '200',
-        r: 'pg',
-        d: 'mm',
-        protocol: 'https',
-      });
+      // this.profileImg = gravatar.url(this.email, {
+      //   s: '200',
+      //   r: 'pg',
+      //   d: 'mm',
+      //   protocol: 'https',
+      // });
       // 패스워드 암호화
       const saltValue = await bcrypt.genSalt(10);
       this.password = await bcrypt.hash(this.password, saltValue);

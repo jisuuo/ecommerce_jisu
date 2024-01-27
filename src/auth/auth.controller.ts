@@ -19,10 +19,7 @@ import { NaverUserGuard } from './guards/naver-user.guard';
 import { UserService } from '../user/user.service';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
 
-@Controller({
-  version: '2',
-  path: 'auth',
-})
+@Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
   constructor(

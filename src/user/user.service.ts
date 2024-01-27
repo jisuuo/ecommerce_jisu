@@ -6,6 +6,8 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { CreateLocalFileDto } from '../local-file/dto/create-local-file.dto';
+import { LocalFileService } from '../local-file/local-file.service';
 
 @Injectable()
 export class UserService {
@@ -14,6 +16,7 @@ export class UserService {
     @InjectRepository(User)
     private userRepo: Repository<User>,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly localFileService: LocalFileService,
   ) {}
 
   // User 생성 api
@@ -75,5 +78,19 @@ export class UserService {
         isEmailVerify: true,
       },
     );
+  }
+
+  async addProfileImg(userId: string, fileData: CreateLocalFileDto) {
+    const newProfileImg =
+      await this.localFileService.registerFileData(fileData);
+    console.log(`+++++`, newProfileImg);
+    // await this.userRepo.update(userId, {
+    //   profileImg: newProfileImg.path,
+    // });
+    const user = await this.userRepo.findOneBy({
+      id: userId,
+    });
+    user.profileImg = newProfileImg.path;
+    return user;
   }
 }
