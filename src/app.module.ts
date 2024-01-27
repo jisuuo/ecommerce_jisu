@@ -14,10 +14,12 @@ import { AppConfigModule } from './config/config.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { ProductsModule } from './products/products.module';
 import { PricesModule } from './prices/prices.module';
+import { TerminusModule } from '@nestjs/terminus';
 
 @Module({
   imports: [
     AppConfigModule,
+    TerminusModule,
     ProductModule,
     DatabaseModule,
     UserModule,

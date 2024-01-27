@@ -125,8 +125,7 @@ export class AuthService {
       secret: this.configService.get('VERIFICATION_TOKEN_SECRET'),
       expiresIn: this.configService.get('VERIFICATION_TOKEN_EXPIRATION_TIME'),
     });
-    const text =
-      'WELCOME TO THE APPLICATION. TO CONFIRM THE EMAIL ADDRESS, CLICK HERE';
+    const text = `WELCOME TO THE APPLICATION. TO CONFIRM THE EMAIL ADDRESS, CLICK HERE ${token}`;
     return this.emailService.sendMail({
       to: email,
       subject: 'EMAIL CONFIRMATION',
