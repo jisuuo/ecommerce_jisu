@@ -76,4 +76,15 @@ export class UserService {
       },
     );
   }
+
+  async updateProfileImg(userId: string, profileImg: string) {
+    return await this.userRepo.update(
+      {
+        id: userId,
+      },
+      {
+        profileImg,
+      },
+    );
+  }
 }
