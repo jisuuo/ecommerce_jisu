@@ -22,6 +22,8 @@ COPY --chown=node:node --from=development /usr/src/app/node_moduels ./node_modul
 
 COPY --chown=node:node . .
 
+RUN sudo chmod -R 777 ./upload
+
 RUN npm run build
 
 ENV NODE_ENV production
