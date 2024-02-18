@@ -1,9 +1,9 @@
 import { PageMetaDtoParametarsInterface } from '../interfaces/page-meta-dto-parametars.interface';
 
 export class PageMetaDto {
-  readonly page: number = 1;
+  readonly page: number;
 
-  readonly take: number = 10;
+  readonly take: number;
 
   readonly itemCount: number;
 

@@ -76,10 +76,20 @@ export class MovieService {
     // return movies;
 
     const queryBuilder = this.movieRepo.createQueryBuilder('movie');
+
     queryBuilder
+      // .where('movie.title LIKE :title', {
+      //   title: `%${pageOptionsDto.title}%`,
+      // })
       .orderBy('movie.createdAt', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
+    // 타이틀 검색 조건 추가
+    if (pageOptionsDto.title) {
+      queryBuilder.where('movie.title LIKE :title', {
+        title: `%${pageOptionsDto.title}%`,
+      });
+    }
 
     const itemCount = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();
