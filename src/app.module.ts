@@ -16,6 +16,7 @@ import { ProductsModule } from './products/products.module';
 import { PricesModule } from './prices/prices.module';
 import { TerminusModule } from '@nestjs/terminus';
 import { LoggerModule } from './logger/logger.module';
+import { SmsModule } from './sms/sms.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { LoggerModule } from './logger/logger.module';
     ProductsModule,
     PricesModule,
     LoggerModule,
+    SmsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -16,6 +16,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { Provider } from '../user/entities/provider.enum';
 import { VerificationTokenPayloadInterfaceInterface } from './interfaces/verificationTokenPayloadInterface.interface';
+import { SmsService } from '../sms/sms.service';
 
 @Injectable()
 export class AuthService {
@@ -24,6 +25,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly emailService: EmailService,
+    private readonly smsService: SmsService,
     @Inject(CACHE_MANAGER) private cacheManger: Cache,
   ) {}
 
@@ -168,5 +170,9 @@ export class AuthService {
       OTP += Math.floor(Math.random() * 10);
     }
     return OTP;
+  }
+
+  async sendSms(phone: string) {
+    return await this.smsService.initiatePhoneNumberVerification(phone);
   }
 }

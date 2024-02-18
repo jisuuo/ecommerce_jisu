@@ -43,4 +43,9 @@ export class AppController {
         ),
     ]);
   }
+
+  @Get('/article')
+  async getArticle() {
+    return await this.appService.getArticle();
+  }
 }

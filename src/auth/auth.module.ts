@@ -10,9 +10,16 @@ import { EmailModule } from '../email/email.module';
 import { GoogleUserStrategy } from './strategies/google-user.strategy';
 import { NaverUserStrategy } from './strategies/naver-user.strategy';
 import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
+import { SmsModule } from '../sms/sms.module';
 
 @Module({
-  imports: [UserModule, JwtModule.register({}), ConfigModule, EmailModule],
+  imports: [
+    UserModule,
+    JwtModule.register({}),
+    ConfigModule,
+    EmailModule,
+    SmsModule,
+  ],
   controllers: [AuthController],
   providers: [
     AuthService,

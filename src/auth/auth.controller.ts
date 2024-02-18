@@ -18,6 +18,7 @@ import { GoogleUserGuard } from './guards/google-user.guard';
 import { NaverUserGuard } from './guards/naver-user.guard';
 import { UserService } from '../user/user.service';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
+import { SmsService } from '../sms/sms.service';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -25,6 +26,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
+    private readonly smsService: SmsService,
   ) {}
 
   // 회원가입 api
@@ -153,5 +155,10 @@ export class AuthController {
   @UseGuards(AccessTokenGuard)
   async resendEmail(@Req() req: RequestWithUser) {
     return await this.authService.resendConfirmLink(req.user.id);
+  }
+
+  @Post('/sms/send')
+  async sendSms(@Body('phone') phone: string) {
+    return await this.authService.sendSms(phone);
   }
 }

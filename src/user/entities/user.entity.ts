@@ -4,9 +4,9 @@ import * as bcrypt from 'bcryptjs';
 import { InternalServerErrorException } from '@nestjs/common';
 import { Role } from './role.enum';
 import { Provider } from './provider.enum';
-import * as gravatar from 'gravatar';
 import { Exclude } from 'class-transformer';
 import { AddressEntity } from './address.entity';
+import * as gravatar from 'gravatar';
 
 @Entity()
 export class User extends BaseEntity {

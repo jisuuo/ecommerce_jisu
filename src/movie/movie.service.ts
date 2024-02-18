@@ -47,14 +47,16 @@ export class MovieService {
   }
 
   async getAllMovies() {
-    const redisData = await this.cacheManger.get('movies');
-    if (redisData) {
-      console.log('+++++++++++++++++++++');
-      return redisData;
-    }
+    // const redisData = await this.cacheManger.get('movies');
+    // if (redisData) {
+    //   console.log(redisData.length);
+    //   return redisData;
+    // }
     console.log('--------------------');
     const movies = await this.movieRepo.find();
     await this.cacheManger.set('movies', movies);
+
+    console.log(movies.length);
     return movies;
   }
 

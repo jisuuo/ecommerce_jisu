@@ -70,6 +70,8 @@ export class UserController {
       return user.profileImg;
     }
 
+    // http://localhost:8000/api/v1/user/[savedPath]?fn=[fileName]
+    // http://localhost:8000/api/v1/user/202104/12312541515151.xlsx?fn=다운받을원본파일명.xlsx
     res.download(
       `${this.configService.get('ATTACH_SAVE_PATH')}/${user.profileImg}`,
     );
