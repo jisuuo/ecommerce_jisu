@@ -1,9 +1,9 @@
 import { PageMetaDtoParametarsInterface } from '../interfaces/page-meta-dto-parametars.interface';
 
 export class PageMetaDto {
-  readonly page: number;
+  readonly page: number = 1;
 
-  readonly take: number;
+  readonly take: number = 10;
 
   readonly itemCount: number;
 
@@ -12,6 +12,15 @@ export class PageMetaDto {
   readonly hasPreviousPage: boolean;
 
   readonly hasNextPage: boolean;
+
+  // constructor({ pageOptionsDto, itemCount }: PageMetaDtoParametarsInterface) {
+  //   this.page = pageOptionsDto.page;
+  //   this.take = pageOptionsDto.take;
+  //   this.itemCount = itemCount;
+  //   this.pageCount = Math.ceil(this.itemCount / this.take);
+  //   this.hasPreviousPage = this.page > 1;
+  //   this.hasNextPage = this.page < this.pageCount;
+  // }
 
   constructor({ pageOptionsDto, itemCount }: PageMetaDtoParametarsInterface) {
     this.page = pageOptionsDto.page;

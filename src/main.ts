@@ -30,7 +30,13 @@ async function bootstrap() {
   app.use(cookieParser());
   app.useLogger(app.get(CustomLogger));
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      // pagination 설정
+      skipMissingProperties: true,
+      transform: true,
+    }),
+  );
   // response serialization
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
