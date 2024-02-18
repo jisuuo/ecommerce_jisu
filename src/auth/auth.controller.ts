@@ -12,12 +12,13 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { LocalUserGuard } from './guards/local-user.guard';
 import { RequestWithUser } from './interfaces/requestWithUser.interface';
-import { AccssTokenGuard } from './guards/accss-token.guard';
+import { AccessTokenGuard } from './guards/access-token-guard.service';
 import { CheckEmailDto } from '../user/dto/check-email.dto';
 import { GoogleUserGuard } from './guards/google-user.guard';
 import { NaverUserGuard } from './guards/naver-user.guard';
 import { UserService } from '../user/user.service';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
+import { SmsService } from '../sms/sms.service';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -25,6 +26,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
+    private readonly smsService: SmsService,
   ) {}
 
   // 회원가입 api
@@ -62,7 +64,7 @@ export class AuthController {
 
   // 로그인 한 사람의 프로필 정보 가져오기 (토큰 검증)
   @Get()
-  @UseGuards(AccssTokenGuard)
+  @UseGuards(AccessTokenGuard)
   async getUserInfoByToken(@Req() req: RequestWithUser) {
     return req.user;
   }
@@ -131,7 +133,7 @@ export class AuthController {
   }
 
   @Post('logout')
-  @UseGuards(AccssTokenGuard)
+  @UseGuards(AccessTokenGuard)
   async logout(@Req() req: RequestWithUser) {
     await this.userService.removeRefreshToken(req.user.id);
     req.res.setHeader(
@@ -150,8 +152,13 @@ export class AuthController {
   }
 
   @Post('resend/email')
-  @UseGuards(AccssTokenGuard)
+  @UseGuards(AccessTokenGuard)
   async resendEmail(@Req() req: RequestWithUser) {
     return await this.authService.resendConfirmLink(req.user.id);
+  }
+
+  @Post('/sms/send')
+  async sendSms(@Body('phone') phone: string) {
+    return await this.authService.sendSms(phone);
   }
 }

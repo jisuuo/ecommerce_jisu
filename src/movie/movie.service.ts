@@ -4,10 +4,12 @@ import { Movie } from './entites/movie.entity';
 import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { Cron, CronExpression } from '@nestjs/schedule';
 import { EmailService } from '../email/email.service';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { PageOptionsDto } from '../common/dtos/page-options.dto';
+import { PageDto } from '../common/dtos/page.dto';
+import { PageMetaDto } from '../common/dtos/page-meta.dto';
 
 @Injectable()
 export class MovieService {
@@ -46,16 +48,54 @@ export class MovieService {
     }
   }
 
-  async getAllMovies() {
-    const redisData = await this.cacheManger.get('movies');
-    if (redisData) {
-      console.log('+++++++++++++++++++++');
-      return redisData;
+  // async getAllMovies() {
+  //   // const redisData = await this.cacheManger.get('movies');
+  //   // if (redisData) {
+  //   //   console.log(redisData.length);
+  //   //   return redisData;
+  //   // }
+  //   console.log('--------------------');
+  //   const movies = await this.movieRepo.find();
+  //   await this.cacheManger.set('movies', movies);
+  //
+  //   console.log(movies.length);
+  //   return movies;
+  // }
+
+  async getAllMovies(pageOptionsDto: PageOptionsDto): Promise<PageDto<Movie>> {
+    // const redisData = await this.cacheManger.get('movies');
+    // if (redisData) {
+    //   console.log(redisData.length);
+    //   return redisData;
+    // }
+    // console.log('--------------------');
+    // const movies = await this.movieRepo.find();
+    // await this.cacheManger.set('movies', movies);
+    //
+    // console.log(movies.length);
+    // return movies;
+
+    const queryBuilder = this.movieRepo.createQueryBuilder('movie');
+
+    queryBuilder
+      // .where('movie.title LIKE :title', {
+      //   title: `%${pageOptionsDto.title}%`,
+      // })
+      .orderBy('movie.createdAt', pageOptionsDto.order)
+      .skip(pageOptionsDto.skip)
+      .take(pageOptionsDto.take);
+    // 타이틀 검색 조건 추가
+    if (pageOptionsDto.title) {
+      queryBuilder.where('movie.title LIKE :title', {
+        title: `%${pageOptionsDto.title}%`,
+      });
     }
-    console.log('--------------------');
-    const movies = await this.movieRepo.find();
-    await this.cacheManger.set('movies', movies);
-    return movies;
+
+    const itemCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+    return new PageDto(entities, pageMetaDto);
   }
 
   // @Cron(CronExpression.EVERY_10_SECONDS)

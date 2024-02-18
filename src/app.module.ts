@@ -16,7 +16,11 @@ import { ProductsModule } from './products/products.module';
 import { PricesModule } from './prices/prices.module';
 import { TerminusModule } from '@nestjs/terminus';
 import { LoggerModule } from './logger/logger.module';
+<<<<<<< HEAD
 import { LocalFileModule } from './local-file/local-file.module';
+=======
+import { SmsModule } from './sms/sms.module';
+>>>>>>> jisu
 
 @Module({
   imports: [
@@ -36,7 +40,11 @@ import { LocalFileModule } from './local-file/local-file.module';
     ProductsModule,
     PricesModule,
     LoggerModule,
+<<<<<<< HEAD
     LocalFileModule,
+=======
+    SmsModule,
+>>>>>>> jisu
   ],
   controllers: [AppController],
   providers: [AppService],

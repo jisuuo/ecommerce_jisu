@@ -12,9 +12,6 @@ import { ConfigModule } from '@nestjs/config';
         POSTGRES_PASSWORD: Joi.string().required(),
         POSTGRES_DB: Joi.string().required(),
 
-        JWT_ACCESS_TOKEN_SECRET: Joi.string().required(),
-        JWT_ACCESS_TOKEN_EXPRIATION_TIME: Joi.string().required(),
-
         EMAIL_SERVICE: Joi.string().required(),
         EMAIL_USER: Joi.string().required(),
         EMAIL_PASSWORD: Joi.string().required(),
@@ -37,6 +34,9 @@ import { ConfigModule } from '@nestjs/config';
         JWT_REFRESH_TOKEN_SECRET: Joi.string().required(),
         JWT_REFRESH_TOKEN_EXPIRATION_TIME: Joi.string().required(),
 
+        JWT_ACCESS_TOKEN_SECRET: Joi.string().required(),
+        JWT_ACCESS_TOKEN_EXPRIATION_TIME: Joi.string().required(),
+
         VERIFICATION_TOKEN_SECRET: Joi.string().required(),
         VERIFICATION_TOKEN_EXPIRATION_TIME: Joi.string().required(),
 
@@ -45,7 +45,16 @@ import { ConfigModule } from '@nestjs/config';
         NODE_ENV: Joi.string().required(),
         SERVICE_PORT: Joi.number().required(),
 
+<<<<<<< HEAD
         UPLOADED_FILES_DESTINATION: Joi.string().required(),
+=======
+        ATTACH_SAVE_PATH: Joi.string().required(),
+
+        TWILIO_ACCOUNT_SID: Joi.string().required(),
+        TWILIO_AUTH_TOKEN: Joi.string().required(),
+        TWILIO_VERIFICATION_SERVICE_SID: Joi.string().required(),
+        TWILIO_PHONE_NUMBER: Joi.string().required(),
+>>>>>>> jisu
       }),
     }),
   ],

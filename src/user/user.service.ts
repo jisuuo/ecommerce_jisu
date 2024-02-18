@@ -80,6 +80,7 @@ export class UserService {
     );
   }
 
+<<<<<<< HEAD
   async addProfileImg(userId: string, fileData: CreateLocalFileDto) {
     const newProfileImg =
       await this.localFileService.registerFileData(fileData);
@@ -92,5 +93,16 @@ export class UserService {
     });
     user.profileImg = newProfileImg.path;
     return user;
+=======
+  async updateProfileImg(userId: string, profileImg: string) {
+    return await this.userRepo.update(
+      {
+        id: userId,
+      },
+      {
+        profileImg,
+      },
+    );
+>>>>>>> jisu
   }
 }
